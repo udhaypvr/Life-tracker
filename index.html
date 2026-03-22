@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Tracker Pro</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e293b">
+    <link rel="apple-touch-icon" href="https://placehold.co/192x192/6366f1/ffffff.png?text=LT">
+    
+    <style>
+        /* Modern UI Color Palette & Base Variables */
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --surface-hover: #334155;
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation - Desktop */
+        nav {
+            width: 250px;
+            background-color: var(--surface-color);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            border-right: 1px solid #334155;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 1rem;
+            text-align: left;
+            font-size: 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: var(--surface-hover);
+            color: var(--text-main);
+        }
+
+        .nav-btn.active {
+            border-left: 4px solid var(--primary-color);
+        }
+
+        /* Main Content Area */
+        main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            padding-bottom: 80px; /* Buffer for mobile nav */
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            font-size: 2rem;
+        }
+
+        /* Card Styles & Layouts */
+        .card {
+            background-color: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Inputs & Buttons */
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #334155;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button.primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        button.primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Checkbox Lists */
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--surface-hover);
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .list-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 1rem;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checked-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .delete-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0 0.5rem;
+        }
+
+        /* Mood Tracker */
+        .mood-container {
+            display: flex;
+            justify-content: space-around;
+            font-size: 2.5rem;
+            margin-top: 1rem;
+        }
+
+        .mood-emoji {
+            cursor: pointer;
+            transition: var(--transition);
+            filter: grayscale(100%);
+        }
+
+        .mood-emoji:hover, .mood-emoji.selected {
+            filter: grayscale(0%);
+            transform: scale(1.2);
+        }
+
+        /* Streak Tracker */
+        .streak-display {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .streak-number {
+            font-size: 5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .btn-reset {
+            background-color: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: var(--transition);
+        }
+        
+        /* Stats Bars */
+        .stat-bar-container {
+            width: 100%;
+            background-color: var(--surface-hover);
+            border-radius: 10px;
+            height: 20px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            background-color: var(--success);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            nav {
+                width: 100%;
+                flex-direction: row;
+                padding: 0.5rem;
+                overflow-x: auto;
+                border-right: none;
+                border-top: 1px solid #334155;
+                order: 2; /* Moves nav to the bottom */
+                position: fixed;
+                bottom: 0;
+                background-color: var(--surface-color);
+            }
+
+            .logo {
+                display: none;
+            }
+
+            .nav-btn {
+                white-space: nowrap;
+                padding: 0.75rem;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+
+            .nav-btn.active {
+                border-left: none;
+                border-bottom: 3px solid var(--primary-color);
+            }
+
+            main {
+                order: 1;
+                height: calc(100vh - 60px);
+                padding: 1rem;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr; /* Stack cards on mobile */
+            }
+
+            .mood-container {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">LifeTracker</div>
+        <button class="nav-btn active" onclick="switchScreen('home')">🏠 Home</button>
+        <button class="nav-btn" onclick="switchScreen('routine')">📅 Routine</button>
+        <button class="nav-btn" onclick="switchScreen('media')">🎬 Media</button>
+        <button class="nav-btn" onclick="switchScreen('food')">🥗 Food</button>
+        <button class="nav-btn" onclick="switchScreen('mood')">😊 Mood</button>
+        <button class="nav-btn" onclick="switchScreen('streak')">🔥 Streak</button>
+        <button class="nav-btn" onclick="switchScreen('stats')">📊 Stats</button>
+    </nav>
+
+    <main>
+        
+        <section id="home" class="screen active">
+            <h2>Welcome Back! 👋</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Today's Focus</h3>
+                    <p style="color: var(--text-muted); margin-top: 10px;">Stay on track with your daily goals. Check your routine tab to get started.</p>
+                </div>
+                <div class="card">
+                    <h3>Current Streak</h3>
+                    <p style="font-size: 2.5rem; color: var(--primary-color); font-weight: bold;" id="home-streak">0 Days</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="routine" class="screen">
+            <h2>Daily Routine</h2>
+            <div class="card">
+                <div class="input-group">
+                    <input type="text" id="routineInput" placeholder="Add a habit...">
+                    <button class="primary" onclick="addChecklistItem('routine')">Add</button>
+                </div>
+                <div id="routineList"></div>
+            </div>
+        </section>
+
+        <section id="media" class="screen">
+            <h2>Watchlist</h2>
+            <div class="card">
+                <div class="input-group">
+                    <input type="text" id="mediaInput" placeholder="Add movie/series...">
+                    <button class="primary" onclick="addChecklistItem('media')">Add</button>
+                </div>
+                <div id="mediaList"></div>
+            </div>
+        </section>
+
+        <section id="food" class="screen">
+            <h2>Food Log</h2>
+            <div class="card">
+                <div class="input-group">
+                    <input type="text" id="foodInput" placeholder="What did you eat?">
+                    <button class="primary" onclick="addFoodItem()">Log</button>
+                </div>
+                <div id="foodList"></div>
+            </div>
+        </section>
+
+        <section id="mood" class="screen">
+            <h2>How are you feeling?</h2>
+            <div class="card">
+                <div class="mood-container" id="mood-container">
+                    <span class="mood-emoji" onclick="setMood(0)">😢</span>
+                    <span class="mood-emoji" onclick="setMood(1)">😕</span>
+                    <span class="mood-emoji" onclick="setMood(2)">😐</span>
+                    <span class="mood-emoji" onclick="setMood(3)">🙂</span>
+                    <span class="mood-emoji" onclick="setMood(4)">🤩</span>
+                </div>
+                <p id="mood-text" style="text-align: center; margin-top: 2rem; color: var(--text-muted);"></p>
+            </div>
+        </section>
+
+        <section id="streak" class="screen">
+            <h2>Discipline Streak</h2>
+            <div class="card streak-display">
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">Days staying strong and focused</p>
+                <div class="streak-number" id="streak-counter">0</div>
+                <p>Days</p>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="primary" onclick="changeStreak(1)">+ Add Day</button>
+                    <button class="primary" style="background-color: var(--surface-hover);" onclick="changeStreak(-1)">- Remove Day</button>
+                    <button class="btn-reset" onclick="resetStreak()">Reset Streak</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="stats" class="screen">
+            <h2>Overview</h2>
+            <div class="card">
+                <h3>Routine Completion</h3>
+                <div class="stat-bar-container">
+                    <div class="stat-bar-fill" id="routine-stat-bar"></div>
+                </div>
+                <p id="routine-stat-text" style="margin-top: 0.5rem; text-align: right; font-size: 0.9rem; color: var(--text-muted);">0%</p>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Media Completed</h3>
+                    <h2 id="media-stat-count">0</h2>
+                </div>
+                <div class="card">
+                    <h3>Meals Logged</h3>
+                    <h2 id="food-stat-count">0</h2>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- DATA STATE & LOCAL STORAGE ---
+        let appData = JSON.parse(localStorage.getItem('lifeTrackerData')) || {
+            routine: [
+                { text: "Drink 2L of Water", checked: false },
+                { text: "Read 10 pages", checked: false }
+            ],
+            media: [],
+            food: [],
+            streak: 0,
+            moodIndex: null
+        };
+
+        function saveData() {
+            localStorage.setItem('lifeTrackerData', JSON.stringify(appData));
+            updateStatsUI();
+        }
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            renderChecklist('routine');
+            renderChecklist('media');
+            renderFoodList();
+            updateStreakUI();
+            updateMoodUI();
+            updateStatsUI();
+        }
+
+        // --- NAVIGATION ---
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // --- RENDERING LISTS ---
+        function renderChecklist(type) {
+            const listElement = document.getElementById(type + 'List');
+            listElement.innerHTML = '';
+            
+            appData[type].forEach((item, index) => {
+                listElement.innerHTML += `
+                    <div class="list-item">
+                        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItem('${type}', ${index}, this.checked)">
+                        <span class="${item.checked ? 'checked-text' : ''}">${item.text}</span>
+                        <button class="delete-btn" onclick="deleteItem('${type}', ${index})">✖</button>
+                    </div>
+                `;
+            });
+        }
+
+        function renderFoodList() {
+            const listElement = document.getElementById('foodList');
+            listElement.innerHTML = '';
+            
+            appData.food.forEach((item, index) => {
+                listElement.innerHTML += `
+                    <div class="list-item">
+                        <span style="color: var(--primary-color); font-weight: bold; margin-right: 1rem;">${item.time}</span>
+                        <span>${item.text}</span>
+                        <button class="delete-btn" onclick="deleteItem('food', ${index})">✖</button>
+                    </div>
+                `;
+            });
+        }
+
+        // --- ADDING & DELETING ITEMS ---
+        function addChecklistItem(type) {
+            const input = document.getElementById(type + 'Input');
+            if (input.value.trim() === "") return;
+            
+            appData[type].push({ text: input.value.trim(), checked: false });
+            input.value = "";
+            saveData();
+            renderChecklist(type);
+        }
+
+        function addFoodItem() {
+            const input = document.getElementById('foodInput');
+            if (input.value.trim() === "") return;
+            
+            const timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            appData.food.push({ text: input.value.trim(), time: timeString });
+            input.value = "";
+            saveData();
+            renderFoodList();
+        }
+
+        function toggleItem(type, index, isChecked) {
+            appData[type][index].checked = isChecked;
+            saveData();
+            renderChecklist(type);
+        }
+
+        function deleteItem(type, index) {
+            appData[type].splice(index, 1);
+            saveData();
+            if (type === 'food') renderFoodList();
+            else renderChecklist(type);
+        }
+
+        // --- STREAK LOGIC ---
+        function changeStreak(amount) {
+            appData.streak += amount;
+            if (appData.streak < 0) appData.streak = 0;
+            saveData();
+            updateStreakUI();
+        }
+
+        function resetStreak() {
+            if(confirm("Reset your streak to 0?")) {
+                appData.streak = 0;
+                saveData();
+                updateStreakUI();
+            }
+        }
+
+        function updateStreakUI() {
+            document.getElementById('streak-counter').innerText = appData.streak;
+            document.getElementById('home-streak').innerText = appData.streak + " Days";
+        }
+
+        // --- MOOD LOGIC ---
+        function setMood(index) {
+            appData.moodIndex = index;
+            saveData();
+            updateMoodUI();
+            
+            const textElement = document.getElementById('mood-text');
+            textElement.innerText = "Mood saved!";
+            setTimeout(() => { textElement.innerText = ""; }, 2000);
+        }
+
+        function updateMoodUI() {
+            const emojis = document.querySelectorAll('.mood-emoji');
+            emojis.forEach((emoji, idx) => {
+                if (idx === appData.moodIndex) emoji.classList.add('selected');
+                else emoji.classList.remove('selected');
+            });
+        }
+
+        // --- STATISTICS LOGIC ---
+        function updateStatsUI() {
+            const totalRoutine = appData.routine.length;
+            const completedRoutine = appData.routine.filter(item => item.checked).length;
+            let percent = totalRoutine > 0 ? Math.round((completedRoutine / totalRoutine) * 100) : 0;
+            
+            document.getElementById('routine-stat-bar').style.width = percent + '%';
+            document.getElementById('routine-stat-text').innerText = percent + '%';
+
+            const completedMedia = appData.media.filter(item => item.checked).length;
+            document.getElementById('media-stat-count').innerText = completedMedia;
+            document.getElementById('food-stat-count').innerText = appData.food.length;
+        }
+
+        // --- PWA SERVICE WORKER REGISTRATION ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('ServiceWorker registered successfully');
+                    })
+                    .catch((err) => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
