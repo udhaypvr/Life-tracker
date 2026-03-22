@@ -6,120 +6,144 @@
     <title>Life Tracker Pro</title>
     
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1e293b">
+    <meta name="theme-color" content="#09090b">
     <link rel="apple-touch-icon" href="https://placehold.co/192x192/6366f1/ffffff.png?text=LT">
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* Modern UI Color Palette & Base Variables */
+        /* Premium UI Color Palette & Variables */
         :root {
-            --bg-color: #0f172a;
-            --surface-color: #1e293b;
-            --surface-hover: #334155;
-            --primary-color: #6366f1;
-            --primary-hover: #4f46e5;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --success: #22c55e;
+            --bg-main: #09090b;       /* Deep Zinc Black */
+            --bg-card: #18181b;       /* Elevated Zinc */
+            --bg-hover: #27272a;      /* Lighter Zinc */
+            --accent-gradient: linear-gradient(135deg, #8b5cf6, #3b82f6); /* Purple to Blue */
+            --accent-solid: #6366f1;  /* Indigo */
+            --text-main: #f4f4f5;     /* Off-white */
+            --text-muted: #a1a1aa;    /* Subtle Grey */
+            --success: #10b981;
             --danger: #ef4444;
-            --border-radius: 12px;
-            --transition: all 0.3s ease;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-main);
             color: var(--text-main);
             display: flex;
             height: 100vh;
             overflow: hidden;
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, transparent 50%);
         }
 
-        /* Sidebar Navigation - Desktop */
+        /* --- DESKTOP SIDEBAR --- */
         nav {
-            width: 250px;
-            background-color: var(--surface-color);
+            width: 260px;
+            background: rgba(24, 24, 27, 0.5);
+            backdrop-filter: blur(12px);
             padding: 2rem 1rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            border-right: 1px solid #334155;
+            gap: 0.5rem;
+            border-right: 1px solid var(--border-color);
             z-index: 10;
         }
 
         .logo {
             font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 2rem;
             text-align: center;
-            letter-spacing: 1px;
+            letter-spacing: -0.5px;
         }
 
         .nav-btn {
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 1rem;
+            padding: 1rem 1.2rem;
             text-align: left;
             font-size: 1rem;
-            border-radius: var(--border-radius);
+            font-weight: 500;
+            border-radius: 12px;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .nav-btn:hover, .nav-btn.active {
-            background-color: var(--surface-hover);
+        .nav-btn .icon { font-size: 1.2rem; }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.03);
             color: var(--text-main);
         }
 
         .nav-btn.active {
-            border-left: 4px solid var(--primary-color);
+            background-color: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            border-left: none; /* Removing old border style */
         }
 
-        /* Main Content Area */
+        /* --- MAIN CONTENT --- */
         main {
             flex: 1;
-            padding: 2rem;
+            padding: 2.5rem;
             overflow-y: auto;
-            padding-bottom: 80px; /* Buffer for mobile nav */
+            padding-bottom: 100px;
         }
 
         .screen {
             display: none;
-            animation: fadeIn 0.4s ease-in-out;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .screen.active {
-            display: block;
-        }
+        .screen.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         h2 {
-            margin-bottom: 1.5rem;
-            color: var(--text-main);
-            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            font-size: 2.2rem;
+            letter-spacing: -1px;
         }
 
-        /* Card Styles & Layouts */
+        /* --- CARDS --- */
         .card {
-            background-color: var(--surface-color);
-            padding: 1.5rem;
+            background-color: var(--bg-card);
+            padding: 1.8rem;
             border-radius: var(--border-radius);
             margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
         .grid-2 {
@@ -128,7 +152,7 @@
             gap: 1.5rem;
         }
 
-        /* Inputs & Buttons */
+        /* --- INPUTS & BUTTONS --- */
         .input-group {
             display: flex;
             gap: 1rem;
@@ -137,178 +161,237 @@
 
         input[type="text"] {
             flex: 1;
-            padding: 0.75rem 1rem;
-            border-radius: var(--border-radius);
-            border: 1px solid #334155;
-            background-color: var(--bg-color);
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background-color: rgba(0, 0, 0, 0.2);
             color: var(--text-main);
             font-size: 1rem;
+            transition: var(--transition);
         }
 
         input[type="text"]:focus {
             outline: none;
-            border-color: var(--primary-color);
+            border-color: var(--accent-solid);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
 
         button.primary {
-            background-color: var(--primary-color);
+            background: var(--accent-gradient);
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--border-radius);
+            padding: 0 1.5rem;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 1rem;
             transition: var(--transition);
             white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
 
         button.primary:hover {
-            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
         }
 
-        /* Checkbox Lists */
+        /* --- CUSTOM CHECKBOX & LISTS --- */
         .list-item {
             display: flex;
             align-items: center;
-            padding: 1rem;
-            background-color: var(--surface-hover);
-            margin-bottom: 0.5rem;
-            border-radius: 8px;
+            padding: 1.2rem;
+            background-color: var(--bg-hover);
+            margin-bottom: 0.8rem;
+            border-radius: 12px;
             transition: var(--transition);
+            border: 1px solid transparent;
         }
 
+        .list-item:hover {
+            border-color: var(--border-color);
+            transform: scale(1.01);
+        }
+
+        /* Hide default checkbox */
         .list-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-right: 1rem;
-            accent-color: var(--primary-color);
+            appearance: none;
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--text-muted);
+            margin-right: 1.2rem;
             cursor: pointer;
+            position: relative;
+            transition: var(--transition);
             flex-shrink: 0;
+        }
+
+        /* Checked state */
+        .list-item input[type="checkbox"]:checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .list-item input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .list-item span {
+            font-size: 1.05rem;
+            transition: var(--transition);
         }
 
         .checked-text {
             text-decoration: line-through;
             color: var(--text-muted);
+            opacity: 0.6;
         }
 
         .delete-btn {
             margin-left: auto;
-            background: none;
+            background: rgba(239, 68, 68, 0.1);
             border: none;
             color: var(--danger);
             cursor: pointer;
-            font-size: 1.2rem;
-            padding: 0 0.5rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
         }
 
-        /* Mood Tracker */
+        .delete-btn:hover { background: var(--danger); color: white; }
+
+        /* --- MOOD TRACKER --- */
         .mood-container {
             display: flex;
-            justify-content: space-around;
-            font-size: 2.5rem;
-            margin-top: 1rem;
+            justify-content: space-between;
+            font-size: 3rem;
+            margin-top: 1.5rem;
+            padding: 0 1rem;
         }
 
         .mood-emoji {
             cursor: pointer;
             transition: var(--transition);
-            filter: grayscale(100%);
+            filter: grayscale(100%) opacity(0.5);
+            transform: scale(0.9);
         }
 
         .mood-emoji:hover, .mood-emoji.selected {
-            filter: grayscale(0%);
-            transform: scale(1.2);
+            filter: grayscale(0%) opacity(1);
+            transform: scale(1.15);
         }
 
-        /* Streak Tracker */
-        .streak-display {
-            text-align: center;
-            padding: 2rem 0;
-        }
-
+        /* --- STREAK DISPLAY --- */
+        .streak-display { text-align: center; padding: 3rem 1rem; }
+        
         .streak-number {
-            font-size: 5rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            line-height: 1;
+            font-size: 6rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
         }
 
         .btn-reset {
             background-color: transparent;
-            border: 1px solid var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
             color: var(--danger);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
             cursor: pointer;
+            font-weight: 600;
             margin-top: 1rem;
             transition: var(--transition);
         }
         
-        /* Stats Bars */
+        .btn-reset:hover { background-color: rgba(239, 68, 68, 0.1); }
+
+        /* --- STATS BARS --- */
         .stat-bar-container {
             width: 100%;
-            background-color: var(--surface-hover);
-            border-radius: 10px;
-            height: 20px;
-            margin-top: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            height: 14px;
+            margin-top: 1rem;
             overflow: hidden;
+            border: 1px solid var(--border-color);
         }
 
         .stat-bar-fill {
             height: 100%;
-            background-color: var(--success);
+            background: var(--accent-gradient);
             width: 0%;
-            transition: width 0.5s ease;
+            transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 20px;
         }
 
-        /* --- MOBILE RESPONSIVENESS --- */
+        .stat-card-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-top: 0.5rem;
+        }
+
+        /* --- MOBILE RESPONSIVENESS (The Floating Dock) --- */
         @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
+            body { flex-direction: column; }
+            main { padding: 1.5rem; padding-bottom: 120px; }
+            h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+            .grid-2 { grid-template-columns: 1fr; gap: 1rem; }
 
+            /* Floating Glass Dock */
             nav {
-                width: 100%;
-                flex-direction: row;
-                padding: 0.5rem;
-                overflow-x: auto;
-                border-right: none;
-                border-top: 1px solid #334155;
-                order: 2; /* Moves nav to the bottom */
                 position: fixed;
-                bottom: 0;
-                background-color: var(--surface-color);
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 92%;
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 0.8rem 1rem;
+                border-radius: 24px;
+                background: rgba(24, 24, 27, 0.85);
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+                z-index: 1000;
             }
 
-            .logo {
-                display: none;
-            }
+            .logo { display: none; }
 
             .nav-btn {
-                white-space: nowrap;
-                padding: 0.75rem;
-                border-left: none;
-                border-bottom: 3px solid transparent;
+                padding: 0.8rem;
+                flex-direction: column;
+                gap: 4px;
+                border-radius: 16px;
+                flex: 1;
+                justify-content: center;
+                background: transparent !important;
             }
 
-            .nav-btn.active {
-                border-left: none;
-                border-bottom: 3px solid var(--primary-color);
+            .nav-btn .icon { font-size: 1.4rem; }
+            .nav-btn .label { display: none; /* Hide text on mobile for clean look */ }
+
+            .nav-btn.active .icon {
+                transform: translateY(-4px);
+                filter: drop-shadow(0 4px 6px rgba(99, 102, 241, 0.5));
             }
 
-            main {
-                order: 1;
-                height: calc(100vh - 60px);
-                padding: 1rem;
-            }
-
-            .grid-2 {
-                grid-template-columns: 1fr; /* Stack cards on mobile */
-            }
-
-            .mood-container {
-                font-size: 2rem;
-            }
+            .mood-container { font-size: 2.2rem; }
         }
     </style>
 </head>
@@ -316,27 +399,41 @@
 
     <nav>
         <div class="logo">LifeTracker</div>
-        <button class="nav-btn active" onclick="switchScreen('home')">🏠 Home</button>
-        <button class="nav-btn" onclick="switchScreen('routine')">📅 Routine</button>
-        <button class="nav-btn" onclick="switchScreen('media')">🎬 Media</button>
-        <button class="nav-btn" onclick="switchScreen('food')">🥗 Food</button>
-        <button class="nav-btn" onclick="switchScreen('mood')">😊 Mood</button>
-        <button class="nav-btn" onclick="switchScreen('streak')">🔥 Streak</button>
-        <button class="nav-btn" onclick="switchScreen('stats')">📊 Stats</button>
+        <button class="nav-btn active" onclick="switchScreen('home')">
+            <span class="icon">🏠</span><span class="label">Home</span>
+        </button>
+        <button class="nav-btn" onclick="switchScreen('routine')">
+            <span class="icon">📅</span><span class="label">Routine</span>
+        </button>
+        <button class="nav-btn" onclick="switchScreen('media')">
+            <span class="icon">🎬</span><span class="label">Media</span>
+        </button>
+        <button class="nav-btn" onclick="switchScreen('food')">
+            <span class="icon">🥗</span><span class="label">Food</span>
+        </button>
+        <button class="nav-btn" onclick="switchScreen('mood')">
+            <span class="icon">✨</span><span class="label">Mood</span>
+        </button>
+        <button class="nav-btn" onclick="switchScreen('streak')">
+            <span class="icon">🔥</span><span class="label">Streak</span>
+        </button>
+        <button class="nav-btn" onclick="switchScreen('stats')">
+            <span class="icon">📊</span><span class="label">Stats</span>
+        </button>
     </nav>
 
     <main>
         
         <section id="home" class="screen active">
-            <h2>Welcome Back! 👋</h2>
+            <h2>Welcome Back 👋</h2>
             <div class="grid-2">
                 <div class="card">
                     <h3>Today's Focus</h3>
-                    <p style="color: var(--text-muted); margin-top: 10px;">Stay on track with your daily goals. Check your routine tab to get started.</p>
+                    <p style="color: var(--text-muted); margin-top: 10px; line-height: 1.5;">Stay on track with your daily goals. Check your routine tab to get started.</p>
                 </div>
                 <div class="card">
                     <h3>Current Streak</h3>
-                    <p style="font-size: 2.5rem; color: var(--primary-color); font-weight: bold;" id="home-streak">0 Days</p>
+                    <p style="font-size: 3rem; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: 0.5rem;" id="home-streak">0 Days</p>
                 </div>
             </div>
         </section>
@@ -345,8 +442,8 @@
             <h2>Daily Routine</h2>
             <div class="card">
                 <div class="input-group">
-                    <input type="text" id="routineInput" placeholder="Add a habit...">
-                    <button class="primary" onclick="addChecklistItem('routine')">Add</button>
+                    <input type="text" id="routineInput" placeholder="Add a new habit...">
+                    <button class="primary" onclick="addChecklistItem('routine')">Add Task</button>
                 </div>
                 <div id="routineList"></div>
             </div>
@@ -368,7 +465,7 @@
             <div class="card">
                 <div class="input-group">
                     <input type="text" id="foodInput" placeholder="What did you eat?">
-                    <button class="primary" onclick="addFoodItem()">Log</button>
+                    <button class="primary" onclick="addFoodItem()">Log Meal</button>
                 </div>
                 <div id="foodList"></div>
             </div>
@@ -376,28 +473,28 @@
 
         <section id="mood" class="screen">
             <h2>How are you feeling?</h2>
-            <div class="card">
+            <div class="card" style="padding: 3rem 1.5rem;">
                 <div class="mood-container" id="mood-container">
-                    <span class="mood-emoji" onclick="setMood(0)">😢</span>
+                    <span class="mood-emoji" onclick="setMood(0)">😫</span>
                     <span class="mood-emoji" onclick="setMood(1)">😕</span>
                     <span class="mood-emoji" onclick="setMood(2)">😐</span>
                     <span class="mood-emoji" onclick="setMood(3)">🙂</span>
                     <span class="mood-emoji" onclick="setMood(4)">🤩</span>
                 </div>
-                <p id="mood-text" style="text-align: center; margin-top: 2rem; color: var(--text-muted);"></p>
+                <p id="mood-text" style="text-align: center; margin-top: 2.5rem; color: var(--accent-solid); font-weight: 600; height: 20px;"></p>
             </div>
         </section>
 
         <section id="streak" class="screen">
             <h2>Discipline Streak</h2>
             <div class="card streak-display">
-                <p style="color: var(--text-muted); margin-bottom: 1rem;">Days staying strong and focused</p>
+                <p style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Current Streak</p>
                 <div class="streak-number" id="streak-counter">0</div>
-                <p>Days</p>
-                <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <button class="primary" onclick="changeStreak(1)">+ Add Day</button>
-                    <button class="primary" style="background-color: var(--surface-hover);" onclick="changeStreak(-1)">- Remove Day</button>
-                    <button class="btn-reset" onclick="resetStreak()">Reset Streak</button>
+                <p style="color: var(--text-muted); font-size: 1.2rem;">Days strong</p>
+                <div style="margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="primary" onclick="changeStreak(1)">+ Log a Day</button>
+                    <button class="primary" style="background: var(--bg-hover); color: var(--text-main);" onclick="changeStreak(-1)">- Remove</button>
+                    <button class="btn-reset" onclick="resetStreak()">Reset</button>
                 </div>
             </div>
         </section>
@@ -409,16 +506,16 @@
                 <div class="stat-bar-container">
                     <div class="stat-bar-fill" id="routine-stat-bar"></div>
                 </div>
-                <p id="routine-stat-text" style="margin-top: 0.5rem; text-align: right; font-size: 0.9rem; color: var(--text-muted);">0%</p>
+                <p id="routine-stat-text" style="margin-top: 0.8rem; text-align: right; font-weight: 600; color: var(--accent-solid);">0%</p>
             </div>
             <div class="grid-2">
                 <div class="card">
-                    <h3>Media Completed</h3>
-                    <h2 id="media-stat-count">0</h2>
+                    <h3 style="color: var(--text-muted);">Media Completed</h3>
+                    <div class="stat-card-number" id="media-stat-count">0</div>
                 </div>
                 <div class="card">
-                    <h3>Meals Logged</h3>
-                    <h2 id="food-stat-count">0</h2>
+                    <h3 style="color: var(--text-muted);">Meals Logged</h3>
+                    <div class="stat-card-number" id="food-stat-count">0</div>
                 </div>
             </div>
         </section>
@@ -459,6 +556,7 @@
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             event.currentTarget.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // --- RENDERING LISTS ---
@@ -471,7 +569,7 @@
                     <div class="list-item">
                         <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItem('${type}', ${index}, this.checked)">
                         <span class="${item.checked ? 'checked-text' : ''}">${item.text}</span>
-                        <button class="delete-btn" onclick="deleteItem('${type}', ${index})">✖</button>
+                        <button class="delete-btn" onclick="deleteItem('${type}', ${index})">✕</button>
                     </div>
                 `;
             });
@@ -484,9 +582,9 @@
             appData.food.forEach((item, index) => {
                 listElement.innerHTML += `
                     <div class="list-item">
-                        <span style="color: var(--primary-color); font-weight: bold; margin-right: 1rem;">${item.time}</span>
+                        <span style="color: var(--accent-solid); font-weight: bold; margin-right: 1.2rem; min-width: 60px;">${item.time}</span>
                         <span>${item.text}</span>
-                        <button class="delete-btn" onclick="deleteItem('food', ${index})">✖</button>
+                        <button class="delete-btn" onclick="deleteItem('food', ${index})">✕</button>
                     </div>
                 `;
             });
@@ -536,7 +634,7 @@
         }
 
         function resetStreak() {
-            if(confirm("Reset your streak to 0?")) {
+            if(confirm("Are you sure you want to break your streak?")) {
                 appData.streak = 0;
                 saveData();
                 updateStreakUI();
@@ -555,8 +653,8 @@
             updateMoodUI();
             
             const textElement = document.getElementById('mood-text');
-            textElement.innerText = "Mood saved!";
-            setTimeout(() => { textElement.innerText = ""; }, 2000);
+            textElement.innerText = "Mood captured ✨";
+            setTimeout(() => { textElement.innerText = ""; }, 2500);
         }
 
         function updateMoodUI() {
@@ -574,7 +672,7 @@
             let percent = totalRoutine > 0 ? Math.round((completedRoutine / totalRoutine) * 100) : 0;
             
             document.getElementById('routine-stat-bar').style.width = percent + '%';
-            document.getElementById('routine-stat-text').innerText = percent + '%';
+            document.getElementById('routine-stat-text').innerText = percent + '% Completed';
 
             const completedMedia = appData.media.filter(item => item.checked).length;
             document.getElementById('media-stat-count').innerText = completedMedia;
@@ -585,9 +683,6 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                    .then((registration) => {
-                        console.log('ServiceWorker registered successfully');
-                    })
                     .catch((err) => {
                         console.log('ServiceWorker registration failed: ', err);
                     });
